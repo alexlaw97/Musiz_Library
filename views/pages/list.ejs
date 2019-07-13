@@ -39,9 +39,12 @@
                                             <td><%= catList[i].name %></td>
                                             <td><%= catList[i].origin %></td>
                                             <td><%= catList[i].description %></td>
-                                            <% if(status == "admin"){ %>
-                                                <td><button type="button" class="btn btn-danger" id="deleteCatBtn" data-toggle="modal" data-target="#deleteCatModal" data-id="<%= catList[i].id %>">Delete</button></td>
-                                            <% } %>
+                                            <td>
+                                                <button type="button" class="btn btn-secondary" id="viewCatBtn" data-toggle="modal" data-target="#viewCatModal" data-url="<%= catList[i].url%>" data-name="<%= catList[i].name%>">See cute picture</button>
+                                                <% if(status == "admin"){ %>
+                                                    <button type="button" class="btn btn-danger" id="deleteCatBtn" data-toggle="modal" data-target="#deleteCatModal" data-id="<%= catList[i]._id %>">Delete</button>
+                                                <% } %>
+                                            </td>
                                         </tr>
                                     <% } %>
                                 </tbody>
@@ -64,7 +67,7 @@
                 </div>
                 <div class="modal-body">
                     <form action="/cat/delete/" id="catDeleteForm" method="post">
-                        <input type="hidden" id="cID" name="catID">
+                        <input type="text" id="cID" name="catID">
                         <p>Are you sure to delete this cat ?</p>
                     </form>
                 </div>
@@ -76,6 +79,28 @@
         </div>
     </div>
     <%# Modal box for delete confirmation (END) %>
+    <%# Modal box for view cat picture %>
+    <div class="modal fade" id="viewCatModal" tabindex="-1" role="dialog" aria-labelledby="viewCatModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-large" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewCatModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card p-2 mx-auto" style="width:25rem;">
+                        <img src="" id="catImage" class="card-img-top" alt="Image contains cat">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%# Modal box for view cat picture (END) %>
 </body>
 <script>
 $(document).ready(function(){
@@ -86,9 +111,16 @@ $(document).ready(function(){
     })
 });
 $(document).on("click","#deleteCatBtn",function(){
-  var id = $(this).data('id');
-  // Detail Modal
-  $("#deleteCatModal #cID").val(id);
+    var id = $(this).data('id');
+    // Detail Modal
+    $("#deleteCatModal #cID").val(id);
+});
+$(document).on("click","#viewCatBtn",function(){
+    var url = $(this).data('url');
+    var name = $(this).data('name');
+    // Detail Modal
+    $("#viewCatModal #viewCatModalLabel").html(name);
+    $("#viewCatModal #catImage").attr("src", url);
 });
 </script>
 </html>

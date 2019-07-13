@@ -13,17 +13,6 @@ mongoose.connect(db).then(() => {
   console.log('connected');
 })
 
-// express()
-//   .use(express.static(path.join(__dirname, 'public')))
-//   .set('views', path.join(__dirname, 'views'))
-//   .set('view engine', 'ejs')
-//   .get('/', (req, res) => res.render('pages/index'))
-//   .get('/dbconnection', (req, res) => {
-//     mongoose.connect(db).then(() => { 
-//       console.log('connected');
-//     })
-//   })
-//   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
 app.use(session({secret: 'ssshhhhh', saveUninitialized: true, resave: true}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -325,7 +314,7 @@ app.post('/insertFact', (req, res) => {
 });
 
 // Delete cat from mongodb
-app.post('/cat/delete/:id', (req, res) => {
+app.post('/cat/delete', (req, res) => {
   console.log('delete cat');
   console.log(req.body.catID);
   var cat = require('./catDb');
