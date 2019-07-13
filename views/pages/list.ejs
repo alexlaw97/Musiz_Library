@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/header.ejs %>
+    <title>Cats | List</title>
+</head>
+<body>
+    <div class="wrapper p-3">
+        <% if(status == "admin"){ %>
+        <button class="btn btn-primary float-left mt-2" onclick="location.href='/newCat'">Create</button>
+        <% } %>
+        <h1 class="text-center">Woohoo Cats
+            <button class="btn btn-warning float-right mt-2" onclick="location.href='/logout'">Logout</button>
+        </h1>
+        <hr/>
+        <div class="content-wrapper mt-2">
+            <div class="content-header">
+                <div class="col-12 col-sm-12 row text-center">
+                    <h4 class="col-6 border-right"><a href="/list">List</a></h4>
+                    <h4 class="col-6 border-left"><a href="/fact">Fact</a></h4>
+                </div>
+            </div>
+            <div class="content p-3">
+                <div class="container-fluid">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-bordered" name="tableList" id="table_list">
+                                <thead>
+                                    <th>Name</th>
+                                    <th>Origin</th>
+                                    <th>Description</th>
+                                    <% if(status == "admin"){ %>
+                                    <th>Action</th>
+                                    <% } %>
+                                </thead>
+                                <tbody>
+                                    <% for(var i = 0; i < catList.length; i++){ %>
+                                        <tr>
+                                            <td><%= catList[i].name %></td>
+                                            <td><%= catList[i].origin %></td>
+                                            <td><%= catList[i].description %></td>
+                                            <% if(status == "admin"){ %>
+                                                <td><button type="button" class="btn btn-danger" id="deleteCatBtn" data-toggle="modal" data-target="#deleteCatModal" data-id="<%= catList[i].id %>">Delete</button></td>
+                                            <% } %>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%# Modal box for delete confirmation %>
+    <div class="modal fade" id="deleteCatModal" tabindex="-1" role="dialog" aria-labelledby="deleteCatModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteCatModalLabel">Delete fact confirmation box</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/cat/delete/" id="catDeleteForm" method="post">
+                        <input type="hidden" id="cID" name="catID">
+                        <p>Are you sure to delete this cat ?</p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="catDeleteForm" class="btn btn-danger mr-auto">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%# Modal box for delete confirmation (END) %>
+</body>
+<script>
+$(document).ready(function(){
+    $('#table_list').DataTable({
+        "language": {
+            "emptyTable":"No Data Found"
+        }
+    })
+});
+$(document).on("click","#deleteCatBtn",function(){
+  var id = $(this).data('id');
+  // Detail Modal
+  $("#deleteCatModal #cID").val(id);
+});
+</script>
+</html>
