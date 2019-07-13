@@ -128,7 +128,7 @@ app.get('/newFact', loginSession, (req, res) => {
 })
 
 //  Load error page
-app.get('/error', (req, res) => {
+app.get('/error', loginSession, (req, res) => {
   res.render('pages/error');
 })
 
@@ -247,6 +247,11 @@ app.post("/findCat", (req, res) => {
   var query = "https://api.thecatapi.com/v1/breeds/search?q="+catName;
   axios.get(query).then((response) => {
       console.log(response.data);
+      if(response.data[0] == null){
+        console.log('There is no species like this');
+        res.redirect('/error');
+        return;
+      }
       var name = response.data[0].name;
       var id = response.data[0].id;
       nCat.findOne({

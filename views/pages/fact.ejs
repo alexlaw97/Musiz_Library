@@ -39,7 +39,9 @@
                                             <td><%= catFact[i].name %></td>
                                             <td><%= catFact[i].fact %></td>
                                             <% if(status == "admin"){ %>
-                                                <td><button type="button" class="btn btn-danger" id="deleteFactBtn" data-toggle="modal" data-target="#deleteFactModal" data-id="<%= catFact[i].id %>">Delete</button></td>
+                                                <td class='text-center'>
+                                                    <button type="button" class="btn btn-danger" id="deleteFactBtn" data-toggle="modal" data-target="#deleteFactModal" data-id="<%= catFact[i].id %>"><i class="fas fa-trash"></i></button>
+                                                </td>
                                             <% } %>
                                         </tr>
                                     <% } %>

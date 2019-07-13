@@ -54,7 +54,9 @@
                                     <% for(var i = 0; i < catFact.length; i++){ %>
                                         <tr>
                                             <td><%= catFact[i].fact%></td>
-                                            <td><button class="btn btn-danger" onclick="location.href='/fact/delete/<%= catFact[i].id %>'">Delete</button></td>
+                                            <td>
+                                                <button class="btn btn-danger" id="deleteFactBtn" data-toggle="modal" data-target="#deleteFactModal" data-id="<%= catFact[i].id %>"><i class="fas fa-trash"></i></button>
+                                            </td>
                                         </tr>
                                     <% } %>
                                 </tbody>
@@ -65,6 +67,30 @@
             </div>
         </div>
     </div>
+    <%# Modal box for delete confirmation %>
+    <div class="modal fade" id="deleteFactModal" tabindex="-1" role="dialog" aria-labelledby="deleteFactModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteFactModalLabel">Delete fact confirmation box</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/fact/delete/" id="factDeleteForm" method="post">
+                        <input type="hidden" id="fID" name="factID">
+                        <p>Are you sure to delete this fact ?</p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="factDeleteForm" class="btn btn-danger mr-auto">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%# Modal box for delete confirmation (END) %>
 </body>
 <script>
 $(document).ready(function(){
@@ -73,6 +99,11 @@ $(document).ready(function(){
             "emptyTable":"No Data Found"
         }
     })
-})
+});
+$(document).on("click","#deleteFactBtn",function(){
+  var id = $(this).data('id');
+  // Detail Modal
+  $("#deleteFactModal #fID").val(id);
+});
 </script>
 </html>

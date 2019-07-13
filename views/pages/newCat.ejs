@@ -49,7 +49,7 @@
                     <div class="container">
                         <form action="/findCat" method="post">
                             <div class="form-group input-group mb-2">
-                                <input type="text" class="form-control" name="catName" placeholder="Cat name" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                <input type="text" class="form-control" name="catName" placeholder="Cat name" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
                                 <button type="submit" class="btn btn-secondary input-group-append">
                                     <i class="fas fa-search mt-1"></i>
                                 </button>  
@@ -71,7 +71,9 @@
                                             <td><%= catList[i].name %></td>
                                             <td><%= catList[i].origin %></td>
                                             <td><%= catList[i].description %></td>
-                                            <td><button class="btn btn-danger" onclick="location.href='/cat/delete/<%= catList[i].id %>'">Delete</button></td>
+                                            <td class="text-center">
+                                                <button class="btn btn-danger" id="deleteCatBtn" data-toggle="modal" data-target="#deleteCatModal" data-id="<%= catList[i]._id %>"><i class="fas fa-trash"></i></button>
+                                            </td>
                                         </tr>
                                     <% } %>
                                 </tbody>
@@ -82,6 +84,30 @@
             </div>
         </div>
     </div>
+    <%# Modal box for delete confirmation %>
+    <div class="modal fade" id="deleteCatModal" tabindex="-1" role="dialog" aria-labelledby="deleteCatModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteCatModalLabel">Delete fact confirmation box</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/cat/delete/" id="catDeleteForm" method="post">
+                        <input type="hidden" id="cID" name="catID">
+                        <p>Are you sure to delete this cat ?</p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="catDeleteForm" class="btn btn-danger mr-auto">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%# Modal box for delete confirmation (END) %>
 </body>
 <script>
 $(document).ready(function(){
@@ -90,6 +116,11 @@ $(document).ready(function(){
             "emptyTable":"No Data Found"
         }
     })
-})
+});
+$(document).on("click","#deleteCatBtn",function(){
+    var id = $(this).data('id');
+    // Detail Modal
+    $("#deleteCatModal #cID").val(id);
+});
 </script>
 </html>

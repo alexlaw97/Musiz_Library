@@ -29,9 +29,7 @@
                                     <th>Name</th>
                                     <th>Origin</th>
                                     <th>Description</th>
-                                    <% if(status == "admin"){ %>
-                                    <th>Action</th>
-                                    <% } %>
+                                    <th class="col-1">Action</th>
                                 </thead>
                                 <tbody>
                                     <% for(var i = 0; i < catList.length; i++){ %>
@@ -39,10 +37,10 @@
                                             <td><%= catList[i].name %></td>
                                             <td><%= catList[i].origin %></td>
                                             <td><%= catList[i].description %></td>
-                                            <td>
-                                                <button type="button" class="btn btn-secondary" id="viewCatBtn" data-toggle="modal" data-target="#viewCatModal" data-url="<%= catList[i].url%>" data-name="<%= catList[i].name%>">See cute picture</button>
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-secondary" id="viewCatBtn" data-toggle="modal" data-target="#viewCatModal" data-url="<%= catList[i].url%>" data-name="<%= catList[i].name%>"><i class="fas fa-eye"></i></button>
                                                 <% if(status == "admin"){ %>
-                                                    <button type="button" class="btn btn-danger" id="deleteCatBtn" data-toggle="modal" data-target="#deleteCatModal" data-id="<%= catList[i]._id %>">Delete</button>
+                                                    <button type="button" class="btn btn-danger" id="deleteCatBtn" data-toggle="modal" data-target="#deleteCatModal" data-id="<%= catList[i]._id %>"><i class="fas fa-trash"></i></button>
                                                 <% } %>
                                             </td>
                                         </tr>
@@ -67,7 +65,7 @@
                 </div>
                 <div class="modal-body">
                     <form action="/cat/delete/" id="catDeleteForm" method="post">
-                        <input type="text" id="cID" name="catID">
+                        <input type="hidden" id="cID" name="catID">
                         <p>Are you sure to delete this cat ?</p>
                     </form>
                 </div>
