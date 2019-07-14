@@ -39,12 +39,12 @@ app.get('/list', loginSession, (req, res) => {
       console.log('aaa');
       var cat = require('./catDb');
       cat.find({}).then((response) => {
-          // console.log(response);
-          res.render("pages/list", {
-              catList : response,
-              status : status
-          });
-          return;
+            res.send(response);
+            // res.render("pages/list", {
+            //     catList : response,
+            //     status : status
+            // });
+            return;
       })
   }
   else if(status == "user"){
@@ -52,11 +52,11 @@ app.get('/list', loginSession, (req, res) => {
       console.log('uuu');
       var cat = require('./catDb');
       cat.find({}).then((response) => {
-          // console.log(response);
-          res.render("pages/list", {
-              catList : response,
-              status : status
-          });
+            res.send(response);
+        //   res.render("pages/list", {
+        //       catList : response,
+        //       status : status
+        //   });
           return;
       })
   }
@@ -69,21 +69,22 @@ app.get('/fact', loginSession, (req, res) => {
       console.log('aaaa');
       var facts = require('./factDb');
       facts.find({}).then((response) => {
-          res.render("pages/fact", {
-              catFact : response,
-              status : status
-          });
+          res.send(response);
+        //   res.render("pages/fact", {
+        //       catFact : response,
+        //       status : status
+        //   });
       })
   }
   else if(status == "user"){
       console.log('uuuu');
       var facts = require('./factDb');
       facts.find({}).then((response) => {
-          // console.log(date);
-          res.render("pages/fact", {
-              catFact : response,
-              status : status
-          });
+          res.send(response);
+        //   res.render("pages/fact", {
+        //       catFact : response,
+        //       status : status
+        //   });
       })
   }
 })
@@ -99,7 +100,7 @@ app.get('/newCat', loginSession, (req, res) => {
   console.log('ncc');
   var cat = require('./catDb');
   cat.find({}).then((response) => {
-      // console.log(response);
+      res.send(response);
       res.render("pages/newCat", {
           catList : response,
           status : status
@@ -118,11 +119,11 @@ app.get('/newFact', loginSession, (req, res) => {
       "name":sessionName
   })
   .then((response) => {
-      // console.log(response);
-      res.render("pages/newFact", {
-          catFact : response,
-          status: sessionStatus
-      });
+      res.send(response);
+    //   res.render("pages/newFact", {
+    //       catFact : response,
+    //       status: sessionStatus
+    //   });
       return;
   })
 })
@@ -157,7 +158,7 @@ app.post('/registration', (req, res) => {
   // }
   user.save().then((result) => {
       console.log(result);
-      res.redirect('/');
+    //   res.redirect('/');
   });
   // res.redirect("/");
 })
@@ -176,12 +177,12 @@ app.post('/login', (req, res) => {
       if(response[0].status == "admin"){
           req.session.name = response[0].name;
           req.session.status = response[0].status;
-          res.redirect('/list');
+        //   res.redirect('/list');
       }
       else if(response[0].status == "user"){
           req.session.name = response[0].name;
           req.session.status = response[0].status;
-          res.redirect('/list');
+        //   res.redirect('/list');
       }
       console.log(req.session.name)
   })
@@ -205,7 +206,7 @@ app.get('/random/fact', (req, res) => {
           console.log(response2);
           if(response2 != null){
               console.log('exist');
-              res.redirect('/random/fact');
+            //   res.redirect('/random/fact');
           }
           else if(response2 == null){
               var date = new Date();
@@ -218,11 +219,11 @@ app.get('/random/fact', (req, res) => {
               })
               rFact.save().then((result) => {
                   console.log(result);
-                  res.redirect(req.get('referer'));
+                //   res.redirect(req.get('referer'));
               })
               .catch((error) => {
                   console.log(error);
-                  res.redirect(req.get('referer'));
+                //   res.redirect(req.get('referer'));
               })
           }
       })
@@ -240,7 +241,7 @@ app.post("/findCat", (req, res) => {
   // Check if input is empty
   if(catName == ""){
       console.log('empty input');
-      res.redirect('/newCat');
+    //   res.redirect('/newCat');
       return;
   }
   // Check name to get ID
@@ -263,7 +264,7 @@ app.post("/findCat", (req, res) => {
           if(response2 != null){  // Exist return
               // Return 
               console.log('exist'+response2.name);
-              res.redirect('/newCat');
+            //   res.redirect('/newCat');
               return false;
           }
           // If not exist
@@ -282,7 +283,7 @@ app.post("/findCat", (req, res) => {
                   cat.save().then((result) => {   //  Save into mongodb
                       console.log(result);
                   })
-                  res.redirect('/newCat');
+                //   res.redirect('/newCat');
               })
               .catch((error) => {     //  Show error
                   console.log(error);
