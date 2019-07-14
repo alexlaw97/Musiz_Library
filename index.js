@@ -44,7 +44,7 @@ app.get('/list', (req, res) => {
             //     catList : response,
             //     status : status
             // });
-            return;
+            // return;
       })
   }
   else if(status == "user"){
@@ -59,6 +59,17 @@ app.get('/list', (req, res) => {
         //   });
           return;
       })
+  }
+  else{
+    console.log('anonymous');
+    var cat = require('./catDb');
+    cat.find({}).then((response) => {
+          res.send(response);
+      //   res.render("pages/list", {
+      //       catList : response,
+      //       status : status
+      //   });
+    })
   }
 })
 
