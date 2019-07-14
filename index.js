@@ -31,7 +31,7 @@ app.get('/register', (req, res) => {
 })
 
 // Load list page 
-app.get('/list', (req, res) => {
+app.get('/list', loginSession, (req, res) => {
     var status = req.session.status;
     console.log(req.session.name);
     if(status == "admin"){
@@ -75,7 +75,7 @@ app.get('/list', (req, res) => {
 })
 
 // Load facts
-app.get('/fact', (req, res) => {
+app.get('/fact', loginSession, (req, res) => {
   var status = req.session.status;
   if(status == "admin"){
       console.log('aaaa');
@@ -101,7 +101,7 @@ app.get('/fact', (req, res) => {
 })
 
 // Load register page
-app.get('/register', (req, res) => {
+app.get('/register', loginSession, (req, res) => {
     res.render("pages/register");
 })
 
@@ -121,7 +121,7 @@ app.get('/newCat', (req, res) => {
 })
 
 // Load add new fact page
-app.get('/newFact', (req, res) => {
+app.get('/newFact', loginSession, (req, res) => {
     var sessionStatus = req.session.status;
     var sessionName = req.session.name;
     console.log('nff');
