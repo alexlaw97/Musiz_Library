@@ -64,12 +64,11 @@ app.get('/list', (req, res) => {
         console.log('uuu');
         var cat = require('./catDb');
         cat.find({}).then((response) => {
-            res.send(response);
             // console.log(response);
-            // res.render("pages/list", {
-            //     catList : response,
-            //     status : status
-            // });
+            res.render("pages/list", {
+                catList : response,
+                status : status
+            });
             return;
         })
     }
@@ -293,10 +292,9 @@ app.post("/findCat", (req, res) => {
                         url: response3.data[0].url
                     })
                     cat.save().then((result) => {   //  Save into mongodb
-                        // console.log(result);
-                        res.send(result);
+                        console.log(result);
                     })
-                    // res.redirect('/newCat');
+                    res.redirect('/newCat');
                 })
                 .catch((error) => {     //  Show error
                     console.log(error);
