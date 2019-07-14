@@ -31,7 +31,7 @@ app.get('/register', (req, res) => {
 })
 
 // Load list page 
-app.get('/list', loginSession, (req, res) => {
+app.get('/list', (req, res) => {
   var status = req.session.status;
   console.log(req.session.name);
   if(status == "admin"){
@@ -63,7 +63,7 @@ app.get('/list', loginSession, (req, res) => {
 })
 
 // Load facts
-app.get('/fact', loginSession, (req, res) => {
+app.get('/fact', (req, res) => {
   var status = req.session.status;
   if(status == "admin"){
       console.log('aaaa');
@@ -95,7 +95,7 @@ app.get('/register', (req, res) => {
 })
 
 // Load add new cat page
-app.get('/newCat', loginSession, (req, res) => {
+app.get('/newCat', (req, res) => {
   var status = req.session.status;
   console.log('ncc');
   var cat = require('./catDb');
@@ -110,7 +110,7 @@ app.get('/newCat', loginSession, (req, res) => {
 })
 
 // Load add new fact page
-app.get('/newFact', loginSession, (req, res) => {
+app.get('/newFact', (req, res) => {
   var sessionStatus = req.session.status;
   var sessionName = req.session.name;
   console.log('nff');
@@ -129,7 +129,7 @@ app.get('/newFact', loginSession, (req, res) => {
 })
 
 //  Load error page
-app.get('/error', loginSession, (req, res) => {
+app.get('/error', (req, res) => {
   res.render('pages/error');
 })
 
