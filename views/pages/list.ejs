@@ -1,124 +1,206 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <% include ../partials/header.ejs %>
-    <title>Cats | List</title>
+  <% include ../partials/header.ejs %>
 </head>
+
 <body>
-    <div class="wrapper p-3">
-        <% if(status == "admin"){ %>
-        <button class="btn btn-primary float-left mt-2" onclick="location.href='/newCat'">Create</button>
-        <% } %>
-        <h1 class="text-center">Woohoo Cats
-            <button class="btn btn-warning float-right mt-2" onclick="location.href='/logout'">Logout</button>
-        </h1>
-        <hr/>
-        <div class="content-wrapper mt-2">
-            <div class="content-header">
-                <div class="col-12 col-sm-12 row text-center">
-                    <h4 class="col-6 border-right"><a href="/list">List</a></h4>
-                    <h4 class="col-6 border-left"><a href="/fact">Fact</a></h4>
+    <% include ../partials/nav.ejs %>
+
+
+      <div id="list">
+        <table id="song_list">
+          <tbody> </tbody>
+        </table>
+      </div>
+      
+          <!-- The Modal -->
+          <div class="modal" id="myModal">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                    <div id="player"></div>
+                    <div class="scrollbar" id="style-3">
+                    <textarea class="form-control" id="modalcont" name="reading_text" cols="500" rows="32" ></textarea>
+                    </div>
                 </div>
+              </div>
             </div>
-            <div class="content p-3">
-                <div class="container-fluid">
-                    <div class="card">
-                        <div class="card-body">
-                            <table class="table table-bordered" name="tableList" id="table_list">
-                                <thead>
-                                    <th>Name</th>
-                                    <th>Origin</th>
-                                    <th>Description</th>
-                                    <th class="col-1">Action</th>
-                                </thead>
-                                <tbody>
-                                    <% for(var i = 0; i < catList.length; i++){ %>
-                                        <tr>
-                                            <td><%= catList[i].name %></td>
-                                            <td><%= catList[i].origin %></td>
-                                            <td><%= catList[i].description %></td>
-                                            <td class="text-center">
-                                                <button type="button" class="btn btn-secondary" id="viewCatBtn" data-toggle="modal" data-target="#viewCatModal" data-url="<%= catList[i].url%>" data-name="<%= catList[i].name%>"><i class="fas fa-eye"></i></button>
-                                                <% if(status == "admin"){ %>
-                                                    <button type="button" class="btn btn-danger" id="deleteCatBtn" data-toggle="modal" data-target="#deleteCatModal" data-id="<%= catList[i]._id %>"><i class="fas fa-trash"></i></button>
-                                                <% } %>
-                                            </td>
-                                        </tr>
-                                    <% } %>
-                                </tbody>
-                            </table>
+
+              <!-- The Modal -->
+              <div class="modal" id="display">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <h4 class="modal-title">Modal Heading</h4>
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                      <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">Description: </label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control-plaintext rounded-0" id="bla" wrap="hard" cols="50" rows="12" readonly></textarea>
                         </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Album: </label>
+                        <div class="col-sm-10">
+                          <input type="text" readonly class="form-control-plaintext"   id="album">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                          <label class="col-sm-2 col-form-label">Total View: </label>
+                          <div class="col-sm-10">
+                            <input type="text"readonly class="form-control-plaintext"  id="view">
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <label class="col-sm-2 col-form-label">Total Plays: </label>
+                          <div class="col-sm-10">
+                            <input type="text" readonly class="form-control-plaintext"  id="play">
+                          </div>  
+                      </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <%# Modal box for delete confirmation %>
-    <div class="modal fade" id="deleteCatModal" tabindex="-1" role="dialog" aria-labelledby="deleteCatModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteCatModalLabel">Delete fact confirmation box</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="/cat/delete/" id="catDeleteForm" method="post">
-                        <input type="hidden" id="cID" name="catID">
-                        <p>Are you sure to delete this cat ?</p>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" form="catDeleteForm" class="btn btn-danger mr-auto">Delete</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <%# Modal box for delete confirmation (END) %>
-    <%# Modal box for view cat picture %>
-    <div class="modal fade" id="viewCatModal" tabindex="-1" role="dialog" aria-labelledby="viewCatModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-large" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="viewCatModalLabel"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="card p-2 mx-auto" style="width:25rem;">
-                        <img src="" id="catImage" class="card-img-top" alt="Image contains cat">
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
+
+                  </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <%# Modal box for view cat picture (END) %>
-</body>
-<script>
-$(document).ready(function(){
-    $('#table_list').DataTable({
-        "language": {
-            "emptyTable":"No Data Found"
+              
+        <script>
+        $(document).ready(function () {
+        })
+        var link,newlink;
+          $('#list tbody').html("");
+          $.ajax({
+            url: '/playlist',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+              artist : $('#artist').val()
+            },
+            success: function(data) {
+              console.log('Win', data);
+              var newmusic;
+              for(var x =0; x<data.length; x++){
+                var song_id = data[x][0].id;
+                link = data[x][0].link;
+                var min = data[x][0].duration;
+                var pic = data[x][0].albumimage;
+                var musicname = data[x][0].songname;
+                var description = data[x][0].description;
+                var album = data[x][0].album;
+                var views = data[x][0].views;
+                var totalplays = data[x][0].plays;
+                newmusic = musicname.replace(/\s+/g, '%20');
+                if(pic == null){
+                  pic = "https://icon-library.net/images/image-error-icon/image-error-icon-4.jpg";
+                }
+                if(min == 0){
+                  minutes = "Not Found";
+                }
+                else{
+                var minutes=(min / 60000).toFixed(2) + " minutes";
+                }
+                var curdiv = $('#list tbody').html();
+                var name = "<tr>\
+                  <td style='display=none'><input id='song_id' type='hidden' value=''"+song_id+"''></td>\
+                  <td><a onclick=chgSrc('"+link+"','"+x+"') class='round-button'><i class='fa fa-play fa-2x' id='playbtn' data-toggle='modal' data-target='#myModal'></i></a></td>\
+                  <td><img src='"+pic+"' alt='Artist' width='50' height='50'></td>\
+                  <td id='song' data-toggle='modal' data-target='#display' data-desc='"+description+"' data-alb='"+album+"' data-view='"+views+"' data-play='"+totalplays+"'>"+data[x][0].songname+"</td>\
+                  <td>"+data[x][0].genre+"</td>\
+                  <td>"+minutes+"</td>\
+                  <td><button id='deletebtn' type='button' class='btn btn-danger' data-id = '"+song_id+"'>Delete</button></td></tr>}"
+                $('#list tbody').html(curdiv + name);
+                }
+            },
+            error: function(){
+              alert("Artist Not Found");
+            },
+          });
+
+        $(document).on("click", "#song", function () {
+            var description = $(this).data('desc');
+            console.log(description);
+            var albums = $(this).data('alb');
+            var view = $(this).data('view');
+            var plays = $(this).data('play');
+            $("#bla").val(description);
+            $("#album").val(albums);
+            $("#view").val(view);
+            $("#play").val(plays);
+        });  
+
+        function chgSrc(link,x)
+        {
+          var newlink = link.replace('watch?v=' , 'embed/');
+          document.getElementById("player").src =  newlink ;
+          $.ajax({
+            url: '/song_lyric',
+            type: 'GET',
+            dataType: 'json',
+            data: {},
+            success: function(data) {
+              $('#modalcont').html(data[x]);
+            },
+            error: function(){
+              console.log("Playlist Not Found");
+            },
+          });
         }
-    })
-});
-$(document).on("click","#deleteCatBtn",function(){
-    var id = $(this).data('id');
-    // Detail Modal
-    $("#deleteCatModal #cID").val(id);
-});
-$(document).on("click","#viewCatBtn",function(){
-    var url = $(this).data('url');
-    var name = $(this).data('name');
-    // Detail Modal
-    $("#viewCatModal #viewCatModalLabel").html(name);
-    $("#viewCatModal #catImage").attr("src", url);
-});
-</script>
+       
+
+        // 2. This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // 3. This function creates an <iframe> (and YouTube player)
+        //    after the API code downloads.
+        var player;
+        function onYouTubeIframeAPIReady() {
+          player = new YT.Player('player', {
+            height: '420',
+            width: '700',
+          });
+        }
+        $("#myModal").on("hidden.bs.modal", function () {
+          console.log("close");
+          $("#myModal iframe").attr("src", $("#myModal iframe").attr("src"));
+        });   
+
+        $(document).on("click", "#deletebtn", function () {
+            var songid = $(this).data('id');
+            if (confirm("Remove from playlist? ") == true) {
+              $.ajax({
+                url: '/delete_playlist',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                  id : songid
+                },
+                complete: function(data) {
+                  console.log("Done");
+                  location.reload();
+                },
+                error: function(){
+                  console.log("Not Found");
+                },
+              });
+            } else {
+                  return false;
+                 }
+         
+        });  
+
+        </script>
+</body>
 </html>

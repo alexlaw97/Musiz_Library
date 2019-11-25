@@ -8,13 +8,6 @@
     <% include ../partials/nav.ejs %>
     <input type="hidden" id="answer" value=<%=ans%>>
 
-    <!-- Search form -->
-    <form class="form-inline md-form form-sm mb-3 ">
-        <i class="fas fa-search" aria-hidden="true"></i>
-        <input class="form-control form-control-sm ml-3 w-75 bar" id="artist" type="text" placeholder="Search" aria-label="Search" name="artist_name" >
-        <button type="button" id="searchartist">Search</button>
-      </form>
-
       <div id="list">
         <table id="song_list">
           <tbody> </tbody>
@@ -27,7 +20,7 @@
                 <div class="modal-content">
                     <div id="player"></div>
                     <div class="scrollbar" id="style-3">
-                    <textarea class="form-control" id="modalcont" name="reading_text" cols="500" rows="32" ></textarea>
+                    <textarea class="form-control-plaintext" id="modalcont" name="reading_text" cols="500" rows="32" ></textarea>
                     </div>
                 </div>
               </div>
@@ -81,24 +74,22 @@
                 </div>
               
         <script>
-        $(document).ready(function () {
-        })
         var link,newlink;
-        $('#searchartist').click(() => {
-          $('#list tbody').html("");
+        $(document).ready(function () {
+            $('#list tbody').html("");
           $.ajax({
-            url: '/search',
-            type: 'POST',
+            url: '/topmusic',
+            type: 'GET',
             dataType: 'json',
-            data: {
-              artist : $('#artist').val()
-            },
+            data: {},
             success: function(data) {
-              console.log('Win', data);
-              var newmusic;
+              // console.log('Win', data);
+              var newmusic, artname;
               for(var x =0; x<data.length; x++){
+                dataarray = data[x][0];
+                dataarray= JSON.stringify(dataarray); 
                 link = data[x][0].link;
-                var artists = data[x][0].name;
+                var artist = data[x][0].name;
                 var min = data[x][0].duration;
                 var pic = data[x][0].albumimage;
                 var musicname = data[x][0].songname;
@@ -107,7 +98,7 @@
                 var views = data[x][0].views;
                 var totalplays = data[x][0].plays;
                 newmusic = musicname.replace(/\s+/g, '%20');
-                artname = artists.replace(/\s+/g, '%20');
+                artname = artist.replace(/\s+/g, '%20');
                 if(pic == null){
                   pic = "https://icon-library.net/images/image-error-icon/image-error-icon-4.jpg";
                 }
@@ -118,13 +109,13 @@
                 var minutes=(min / 60000).toFixed(2) + " minutes";
                 }
                 var curdiv = $('#list tbody').html();
-                var name = "<tr>\
-                  <td><a onclick=chgSrc('"+link+"','"+newmusic+"') class='round-button'><i class='fa fa-play fa-2x' id='playbtn' data-toggle='modal' data-target='#myModal'></i></a></td>\
-                  <td><img src='"+pic+"' alt='Artist' width='50' height='50'></td>\
-                  <td id='song' data-toggle='modal' data-target='#display' data-desc='"+description+"' data-alb='"+album+"' data-view='"+views+"' data-play='"+totalplays+"'>"+data[x][0].songname+"</td>\
-                  <td>"+data[x][0].genre+"</td>\
-                  <td>"+minutes+"</td>\
-                  <td><button class='button button-like' id='love' data-id = '"+x+"' data-name = '"+artname+"' data-music = '"+newmusic+"'><i class='fa fa-heart'></i><span>Add playlist</span></button></td></tr>"
+                var name = '<tr>\
+                  <td><a onclick=chgSrc("'+link+'","'+newmusic+'","'+artname+'") class="round-button"><i class="fa fa-play fa-2x" id="playbtn" data-toggle="modal" data-target="#myModal"></i></a></td>\
+                  <td><img src="'+pic+'" alt=Artist width=50 height=50></td>\
+                  <td id="song" data-toggle="modal" data-target="#display" data-desc="'+description+'" data-alb="'+album+'" data-view="'+views+'" data-play="'+totalplays+'">'+data[x][0].songname+'</td>\
+                  <td>'+data[x][0].genre+'</td>\
+                  <td>'+minutes+'</td>\
+                  <td><button class="button button-like" id="love" data-id = "'+x+'" data-name = "'+artname+'" data-music = "'+newmusic+'"><i class="fa fa-heart"></i><span>Add playlist</span></button></td></tr>}'
                 $('#list tbody').html(curdiv + name);
                 }
             },
@@ -134,40 +125,6 @@
           });
         })
 
-        $(document).on("click", "#song", function () {
-          var description = $(this).data('desc');
-          console.log(description);
-          var albums = $(this).data('alb');
-          var view = $(this).data('view');
-          var plays = $(this).data('play');
-          $("#bla").val(description);
-          $("#album").val(albums);
-          $("#view").val(view);
-          $("#play").val(plays);
-        });  
-
-        function chgSrc(link,song_name)
-        {
-          var newlink = link.replace('watch?v=' , 'embed/');
-          document.getElementById("player").src =  newlink ;
-          $.ajax({
-            url: '/lyric',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-              song : song_name,
-              artist : $('#artist').val()
-            },
-            success: function(data) {
-              $('#modalcont').html(data[0]);
-              
-            },
-            error: function(){
-              console.log("Lyrics Not Found");
-            },
-          });
-        }
-       
         $(document).on("click", "#love", function() {
           var myId = $(this).data('id');
           var music = $(this).data('music');
@@ -182,13 +139,13 @@
               $(this).toggleClass("liked");
               console.log("done");
               $.ajax({
-                url: '/ins_url2',
+                url: '/ins_url',
                 type: 'POST',
                 dataType: 'json',
                 data: {
                   id : myId,
+                  musics : music,
                   names : name,
-                  musics : music
                 },
                 success: function(data) {
                   alert("Playlist Saved")
@@ -202,6 +159,41 @@
                  }
                 }  
             });
+       
+        $(document).on("click", "#song", function () {
+          var description = $(this).data('desc');
+          console.log(description);
+          var albums = $(this).data('alb');
+          var view = $(this).data('view');
+          var plays = $(this).data('play');
+          $("#bla").val(description);
+          $("#album").val(albums);
+          $("#view").val(view);
+          $("#play").val(plays);
+        });  
+
+        function chgSrc(link,song_name,artname)
+        {
+          var newlink = link.replace('watch?v=' , 'embed/');
+          document.getElementById("player").src =  newlink ;
+          $.ajax({
+            url: '/lyric',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+              song : song_name,
+              artist : artname
+            },
+            success: function(data) {
+              $('#modalcont').html(data[0]);
+              
+            },
+            error: function(){
+              console.log("Lyrics Not Found");
+            },
+          });
+        }
+       
 
         // 2. This code loads the IFrame Player API code asynchronously.
       var tag = document.createElement('script');
@@ -223,6 +215,12 @@
           console.log("close");
           $("#myModal iframe").attr("src", $("#myModal iframe").attr("src"));
         });   
+
+        $(function() {
+          $(".heart").on("click", function() {
+            $(this).toggleClass("is-active");
+          });
+        });
 
         </script>
 </body>

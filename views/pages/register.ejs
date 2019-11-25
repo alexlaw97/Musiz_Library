@@ -7,25 +7,60 @@
 <body>
     <div class="wrapper p-3">
         <div class="container p-3">
-            <h1>Register your account.</h1>
+            <h1 align="center">Register your account.</h1>
             <hr />
-            <form action="/registration" method="post">
-                <div class="form-group">
-                    <label for="name">name</label>
+            <form action="/signup" method="post">
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="name">Name</label>
+                    </div>
                     <input type="text" id="name" name="name" class="form-control" placeholder="enter name..." required>
                 </div>
-                <div class="form-group">
-                    <label for="username">username</label>
-                    <input type="text" id="username" name="username" class="form-control" placeholder="enter username..." required>
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="text-danger collapse" id="invalidmsg"> Invalid Username</span>
+                        <label class="input-group-text" for="username">Username</label>
+                    </div>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="enter username..." autocomplete="new-name" required>
                 </div>
-                <div class="form-group">
-                    <label for="password">password</label>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="enter password..." required> 
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="password">Password</label>
+                    </div>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="enter password..." autocomplete="new-password" required> 
                 </div>
                 <a class="btn btn-secondary" href="/">Back</a>
                 <input type="submit" class="btn btn-primary float-right" name="btnStatus" value="register">
             </form>
         </div>
     </div>
+    <script>
+        $("#username").change(function() {
+            console.log("asdasd");
+            $.ajax({
+                url: '/search_id',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    user: $('#username').val()
+                },
+                success: function(data) {
+                    if(data[0]){
+                            $('#invalidmsg').removeClass("collapse");
+                            $('#btn').addClass("disabled");
+                            $('#btn').attr("disabled","true");
+                        }
+                        else{
+                            $('#invalidmsg').addClass("collapse");
+                            $('#btn').removeClass("disabled");
+                            $('#btn').removeAttr("disabled","true");
+                        }       
+                },
+                error: function(){
+                
+                },
+            });
+        })
+    </script>
 </body>
 </html>

@@ -5,7 +5,8 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const path = require('path')
 const app = express();
-const db = "mongodb+srv://admin:admin123@api-6qso5.mongodb.net/CatAPI?retryWrites=true&w=majority"
+const apikey = '195003';
+const db = "mongodb+srv://admin:abc0123@cluster0-k1y0a.mongodb.net/assignment?retryWrites=true&w=majority";
 const PORT = process.env.PORT || 5000
 
 // Mongodb connection
@@ -20,366 +21,351 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// Load login page
-app.get('/', (req, res) => {
-  res.render("pages/login");
-});
 
-// Load register page
-app.get('/register', (req, res) => {
-  res.render("pages/register");
-})
-
-// Load list page 
-app.get('/list', loginSession, (req, res) => {
-    var status = req.session.status;
-    console.log(req.session.name);
-    if(status == "admin"){
-        // Admin page
-        console.log('aaa');
-        var cat = require('./catDb');
-        cat.find({}).then((response) => {
-            // console.log(response);
-            res.render("pages/list", {
-                catList : response,
-                status : status
-            });
-            return;
+    // Load Index page
+    app.get('/', loginSession, (req, res) => {
+        res.render("pages/index",{
+           ans : req.session.ans,
+           name : req.session.name
         })
-    }
-    else if(status == "user"){
-        // User page
-        console.log('uuu');
-        var cat = require('./catDb');
-        cat.find({}).then((response) => {
-            // console.log(response);
-            res.render("pages/list", {
-                catList : response,
-                status : status
-            });
-            return;
-        })
-    }
-    else{
-        console.log('uuu');
-        var cat = require('./catDb');
-        cat.find({}).then((response) => {
-            // console.log(response);
-            res.render("pages/list", {
-                catList : response,
-                status : status
-            });
-            return;
-        })
-    }
-})
-
-// Load facts
-app.get('/fact', loginSession, (req, res) => {
-  var status = req.session.status;
-  if(status == "admin"){
-      console.log('aaaa');
-      var facts = require('./factDb');
-      facts.find({}).then((response) => {
-          res.render("pages/fact", {
-              catFact : response,
-              status : status
-          });
-      })
-  }
-  else if(status == "user"){
-      console.log('uuuu');
-      var facts = require('./factDb');
-      facts.find({}).then((response) => {
-          // console.log(date);
-          res.render("pages/fact", {
-              catFact : response,
-              status : status
-          });
-      })
-  }
-})
-
-// Load register page
-app.get('/register', loginSession, (req, res) => {
-    res.render("pages/register");
-})
-
-// Load add new cat page
-app.get('/newCat', (req, res) => {
-    var status = req.session.status;
-    console.log('ncc');
-    var cat = require('./catDb');
-    cat.find({}).then((response) => {
-        // console.log(response);
-        res.render("pages/newCat", {
-            catList : response,
-            status : status
-        });
-        return;
-    })
-})
-
-// Load add new fact page
-app.get('/newFact', loginSession, (req, res) => {
-    var sessionStatus = req.session.status;
-    var sessionName = req.session.name;
-    console.log('nff');
-    var fact = require('./factDb');
-    fact.find({
-        "name":sessionName
-    })
-    .then((response) => {
-        // console.log(response);
-        res.render("pages/newFact", {
-            catFact : response,
-            status: sessionStatus
-        });
-        return;
-    })
-})
-
-//  Load error page
-app.get('/error', (req, res) => {
-    res.render('pages/error');
-})
-
-// Redirect to home page
-app.get('/logout', (req, res) => {
-    req.session.destroy();    // Destroy session before redirect
-    console.log('session destroy');
-    res.redirect("/");
-});
-
-// Saved into MongoDB User
-app.post('/registration', (req, res) => {
-    var insUser = require('./userDb');
-    console.log(req.body.name);
-    console.log(req.body.username);
-    console.log(req.body.password);
-    user = new insUser({
-        name: req.body.name,
-        username: req.body.username,
-        password: req.body.password,
-        status: "user"
-    })
-    // if(!user.username || !user.name || !user.password){
-    //     res.send('Empty field detected');
-    //     return;
-    // }
-    user.save().then((result) => {
-        console.log(result);
-        res.redirect('/');
     });
-    // res.redirect("/");
-})
 
-// Login using MongoDB User
-app.post('/login', (req, res) => {
-    var user = require('./userDb');
-    var username = req.body.username;
-    var password = req.body.password;
-    user.find({
-        "username": username,
-        "password": password
-    })
-    .then((response) => {
-        console.log(response[0].status);
-        if(response[0].status == "admin"){
-            req.session.name = response[0].name;
-            req.session.status = response[0].status;
-            res.redirect('/list');
-        }
-        else if(response[0].status == "user"){
-            req.session.name = response[0].name;
-            req.session.status = response[0].status;
-            res.redirect('/list');
-        }
-        console.log(req.session.name)
-    })
-    .catch((error) => {
-        console.log('user not found');
-        res.redirect('/');
-        return false;
-    })
-})
+    app.get('/top', loginSession, (req, res) => {
+        res.render("pages/topmusic",{
+            ans : req.session.ans,
+            name : req.session.name
+        });
+    });
 
-// Randomly get a fact
-app.get('/random/fact', (req, res) => {
-    var fact = require('./factDb');
-    var query = "https://catfact.ninja/fact";
-    axios.get(query).then((response) => {
-        console.log(response.data);
-        fact.findOne({
-            "fact": response.data.fact
+    app.get('/list', loginSession, (req, res) => {
+        res.render("pages/list",{
+            ans : req.session.ans,
+            name : req.session.name
+        });
+    });
+
+    //  Load error page
+    app.get('/error', (req, res) => {
+        res.render('pages/error');
+    })
+
+    // Load Login page
+    app.get('/login', loginSession, (req, res) => {
+        res.render("pages/login",{
+            ans : req.session.ans
+        });
         })
-        .then((response2) => {
-            console.log(response2);
-            if(response2 != null){
-                console.log('exist');
-                res.redirect('/random/fact');
-            }
-            else if(response2 == null){
-                var date = new Date();
-                var dateNow = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
-                console.log('not exist');
-                rFact = new fact({
-                    name: "anonymous",
-                    fact: response.data.fact,
-                    date: dateNow
-                })
-                rFact.save().then((result) => {
-                    console.log(result);
-                    res.redirect(req.get('referer'));
-                })
-                .catch((error) => {
-                    console.log(error);
-                    res.redirect(req.get('referer'));
-                })
-            }
+
+    // Redirect to home page
+    app.get('/logout', (req, res) => {
+        req.session.destroy();    // Destroy session before redirect
+        console.log('session destroy');
+        res.render("pages/index",{
+            ans : "no"
+        });
+    });
+
+    // Load register page
+    app.get('/register', (req, res) => {
+    res.render("pages/register");
+    })
+
+    //Sign Up Function
+    app.post('/signup' , (req,res) => {
+        var login = require('./userDb');
+        lgn = new login({
+            username: req.body.username,
+            password: req.body.password,
+            name:req.body.name
+        }) 
+        lgn.save().then((result) => {
+            loginSession();
+          })
+    })
+    
+    // Sign In function
+    app.post('/signin' , (req, res) => {
+        var login = require('./userDb');
+        login.find({
+            username : req.body.username,
+            password : req.body.password
         })
+        .then((response) =>{
+            req.session.name = response[0].name;
+            req.session.user = response[0].username;
+            res.render('pages/index', {
+                name : req.session.name,
+                ans : "yes"
+            });
+        })
+        .catch((error) => {
+            console.log('user not found');
+            res.redirect('/login');
+            return false;
+        })  
+    })
+
+    // Checking Username
+    app.post('/search_id' , (req, res) => {
+        var username = req.body.user;
+        var login = require('./userDb');
+        login.find({
+            username : username,
+        })
+        .then((response) =>{
+            var user = response;
+            res.send(user);
+        })    
+    })
+
+
+    app.post('/search', (req,res) => {
+        var artist = req.body.artist;
+        var songs = [];
+        var array = [];
+        const querystr = `https://theaudiodb.com/api/v1/json/${apikey}/track-top10.php?s=${artist}`;
+        axios.get(querystr).then((response) => {
+        if(response['data'].track == null){
+            res.redirect('/error');
+            }
+        else{
+            const querykeys = Object.keys(response['data'].track);
+            for(var x=0;x < querykeys.length; x++) {
+                var song = response.data.track[x].strTrack;
+                var artistname = response.data.track[x].strArtist;
+                var genre = response.data.track[x].strGenre;
+                var musicduration = response.data.track[x].intDuration;
+                var desc = response.data.track[x].strDescriptionEN;
+                var albumimg = response.data.track[x].strTrackThumb;
+                var album = response.data.track[x].strAlbum;
+                var link = response.data.track[x].strMusicVid;
+                var totallisteners = response.data.track[x].intTotalListeners;
+                var totalplays = response.data.track[x].intTotalPlays;  
+                songs = [{
+                    "songname" : song,
+                    "duration" : musicduration,
+                    "genre" : genre,
+                    "name" : artistname,
+                    "description" : desc,
+                    "album" : album,
+                    "albumimage" : albumimg,
+                    "link" : link,
+                    "views" : totallisteners,
+                    "plays" : totalplays
+                }]
+                array.push(songs);
+            }
+                res.send(array);
+            }   
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+        })
+
+    app.get('/topmusic', (req,res) => {
+        var array = [];
+        var songs = [];
+        const querystr = `https://theaudiodb.com/api/v1/json/1/mostloved.php?format=track&format=track`;
+        axios.get(querystr).then((response) => {
+        if(response['data'].loved == null){
+            res.redirect('/error');
+            }
+        else{
+            const querykeys = Object.keys(response['data'].loved);
+            for(var x=0;x < querykeys.length; x++) {
+                var song = response.data.loved[x].strTrack;
+                var artistname = response.data.loved[x].strArtist;
+                var genre = response.data.loved[x].strGenre;
+                var musicduration = response.data.loved[x].intDuration;
+                var desc = response.data.loved[x].strDescriptionEN;
+                var albumimg = response.data.loved[x].strTrackThumb;
+                var album = response.data.loved[x].strAlbum;
+                var link = response.data.loved[x].strMusicVid;
+                var totallisteners = response.data.loved[x].intTotalListeners;
+                var totalplays = response.data.loved[x].intTotalPlays;  
+                songs = [{
+                    "songname" : song,
+                    "duration" : musicduration,
+                    "genre" : genre,
+                    "name" : artistname,
+                    "description" : desc,
+                    "album" : album,
+                    "albumimage" : albumimg,
+                    "link" : link,
+                    "views" : totallisteners,
+                    "plays" : totalplays
+                }]
+                array.push(songs);
+            }
+                res.send(array);
+            }   
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+        })
+        
+        
+    app.post('/lyric', (req,res) => {
+        var artist = req.body.artist;
+        var song = req.body.song;
+        var bank = [];
+        const querystr2 = `https://api.lyrics.ovh/v1/${artist}/${song}`;
+        axios.get(querystr2).then((response2) => {
+            bank.push(response2.data.lyrics);
+            res.send(bank);
+            })
         .catch((error) => {
             console.log(error);
         })
-    })
-})
+    }); 
 
-// Get cat api using input
-app.post("/findCat", (req, res) => {
-    var nCat = require('./catDb');
-    // Check database for same name
-    var catName = req.body.catName;
-    // Check if input is empty
-    if(catName == ""){
-        console.log('empty input');
-        res.redirect('/newCat');
-        return;
-    }
-    // Check name to get ID
-    var query = "https://api.thecatapi.com/v1/breeds/search?q="+catName;
-    axios.get(query).then((response) => {
-        console.log(response.data);
-        if(response.data[0] == null){
-            console.log('There is no species like this');
-            res.redirect('/error');
-            return;
+    //Insert into database
+    app.post('/ins_url', (req,res) => {
+        var inslist = require('./listDb')
+        var name = req.body.names;
+        var musics = req.body.musics;
+        var index = req.body.id;
+        var usernames = req.session.user;
+        var bank = [];
+        const querystr = `https://theaudiodb.com/api/v1/json/1/mostloved.php?format=track&format=track`;
+        axios.get(querystr).then((response) => {
+            data = response.data.loved[index];
+            const querystr2 = `https://api.lyrics.ovh/v1/${name}/${musics}`;
+            axios.get(querystr2).then((response2) => {
+                bank.push(response2.data.lyrics);
+                playlist = new inslist({
+                    username: usernames,
+                    song: data,
+                    lyric:bank
+                }) 
+                playlist.save().then((result) => {
+                    console.log("Successful");
+                    res.send(bank);
+                })
+            })
+        })
+    }); 
+    
+    app.post('/ins_url2', (req,res) => {
+        var inslist = require('./listDb')
+        var artist = req.body.names;
+        var index = req.body.id;
+        var song = req.body.musics;
+        var usernames = req.session.user;
+        var bank = [];
+        const querystr = `https://theaudiodb.com/api/v1/json/${apikey}/track-top10.php?s=${artist}`;
+        axios.get(querystr).then((response) => {
+                data = response.data.track[index];
+                const querystr2 = `https://api.lyrics.ovh/v1/${artist}/${song}`;
+                axios.get(querystr2).then((response2) => {
+                    bank.push(response2.data.lyrics);
+                    playlist = new inslist({
+                        username: usernames,
+                        song: data,
+                        lyric:bank
+                    }) 
+                    playlist.save().then((result) => {
+                        console.log("Successful");
+                        res.send(bank);
+                    })
+                })
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+        })
+    
+    app.get('/playlist', (req,res) => {
+        var array = [];
+        var songs = [];
+        var plylist = require('./listDb');
+        plylist.find({
+            username : req.session.user
+        })
+        .then((response) => {
+            for(var x=0;x < response.length; x++) {
+                var songid = response[x]._id;
+                var song = response[x].song.strTrack;
+                var artistname = response[x].song.strArtist;
+                var genre = response[x].song.strGenre;
+                var musicduration = response[x].song.intDuration;
+                var desc = response[x].song.strDescriptionEN;
+                var albumimg = response[x].song.strTrackThumb;
+                var album = response[x].song.strAlbum;
+                var link = response[x].song.strMusicVid;
+                var totallisteners = response[x].song.intTotalListeners;
+                var totalplays = response[x].song.intTotalPlays;  
+                songs = [{
+                    "id" : songid,
+                    "songname" : song,
+                    "duration" : musicduration,
+                    "genre" : genre,
+                    "name" : artistname,
+                    "description" : desc,
+                    "album" : album,
+                    "albumimage" : albumimg,
+                    "link" : link,
+                    "views" : totallisteners,
+                    "plays" : totalplays
+                }]
+                array.push(songs);
+            }
+                res.send(array);
+        })
+           
+    })
+
+    app.get('/song_lyric', (req,res) => {
+        var bank = [];
+        var plylist = require('./listDb');
+        plylist.find({
+            username : req.session.user
+        })
+        .then((response) => {
+            for(var x=0;x < response.length; x++) {
+                var lyric = response[x].lyric;
+                bank.push(lyric);
+            }
+            res.send(bank);
+        });
+    })
+
+    app.post('/delete_playlist', (req,res) => {
+        var id = req.body.id;
+        var list = require('./listDb')
+        list.deleteOne({ 
+            "_id": id
+        })
+        .then(response => {
+            console.log("Delete Successful");
+            res.send(response);
+        })
+        .catch(error => {
+            console.log(error);
+            res.redirect(req.get('referer'));
+        });
+    })
+
+    // Connect to port 5000 unless heroku define
+    app.listen(PORT, () =>{
+        console.log(`Listening on ${ PORT }`)
+    });
+
+    // Function for checking session
+    function loginSession(req, res, next) {
+        var sessionName = req.session.name;
+        var sessionuser = req.session.user;
+        if(!sessionName){
+            // res.redirect('/');  // Redirect back to login
+            // console.log('session invalid');
+            req.session.ans = "no";
+            next();
         }
-        var name = response.data[0].name;
-        var id = response.data[0].id;
-        nCat.findOne({
-            "name":name
-        })
-        .then((response2) => {   // Get cat exist
-            // console.log(response2)
-            // If exist
-            if(response2 != null){  // Exist return
-                // Return 
-                console.log('exist'+response2.name);
-                res.redirect('/newCat');
-                return false;
-            }
-            // If not exist
-            else if(response2 == null){ // Not exist add
-                console.log('new');
-                // Insert
-                var query3 = "https://api.thecatapi.com/v1/images/search?breed_id="+id; //  Get cat image url
-                axios.get(query3).then((response3) => {
-                    console.log(response3.data[0].url);
-                    cat = new nCat({
-                        name: response.data[0].name,
-                        origin: response.data[0].origin,
-                        description: response.data[0].description,
-                        url: response3.data[0].url
-                    })
-                    cat.save().then((result) => {   //  Save into mongodb
-                        console.log(result);
-                    })
-                    res.redirect('/newCat');
-                })
-                .catch((error) => {     //  Show error
-                    console.log(error);
-                })
-                return false;
-            }
-        })
-        .catch((error) => {
-            console.log(error)
-        })
-    })
-});
-
-// Insert fact into mongodb using input
-app.post('/insertFact', (req, res) => {
-    var name = req.session.name;        //  Get session name
-    var userFact = req.body.userFact;   //  Get user input
-    var date = new Date();              //  Get date now
-    var dateNow = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();   // Get Date with format (YYYY-MM-DD)
-    var nFact = require('./factDb');    //  Get Fact DB
-    console.log(dateNow);
-    fact = new nFact({
-        fact : userFact,
-        name : name,
-        date : dateNow
-    })
-    fact.save().then((result) => {      //  Save into mongodb
-        console.log(result);
-        res.redirect('/newFact');
-    })
-    .catch((error) => {
-        console.log(error);
-    })
-    });
-
-    // Delete cat from mongodb
-    app.post('/cat/delete', (req, res) => {
-    console.log('delete cat');
-    console.log(req.body.catID);
-    var cat = require('./catDb');
-    cat.deleteOne({ 
-        "_id": req.body.catID
-    })
-    .then(response => {
-        console.log('delete success. ID: '+req.body.catID);
-        res.redirect(req.get('referer'));
-    })
-    .catch(error => {
-        console.log(error);
-        res.redirect(req.get('referer'));
-    });
-});
-
-// Delete fact from mongodb
-app.post('/fact/delete', (req, res) => {
-    console.log('delete fact');
-    console.log(req.body.factID);
-    var fact = require('./factDb');
-    fact.deleteOne({ 
-        "_id": req.body.factID
-    })
-    .then(response => {
-        console.log('delete success. ID: '+req.body.factID);
-        res.redirect(req.get('referer'));
-    })
-    .catch(error => {
-        console.log(error);
-        res.redirect(req.get('referer'));
-    });
-});
-
-// Connect to port 5000 unless heroku define
-app.listen(PORT, () =>{
-    console.log(`Listening on ${ PORT }`)
-});
-
-// Function for checking session
-function loginSession(req, res, next) {
-    var sessionName = req.session.name;
-    if(!sessionName){
-        res.redirect('/');  // Redirect back to login
-        console.log('session invalid');
-    }
-    else {
-        console.log('session valid');
-        next(); // Continue to next step
-    }
-};
+        else {
+            // console.log('session valid'); 
+            req.session.ans = "yes";
+            next();
+        }
+    };
