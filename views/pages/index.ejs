@@ -191,7 +191,12 @@
                   musics : music
                 },
                 success: function(data) {
-                  alert("Playlist Saved")
+                  if(data[0]){
+                    alert("Playlist already have");
+                  }
+                  else{
+                    alert("Playlist Saved")
+                  }
                 },
                 error: function(){
                   console.log("Error");

@@ -134,7 +134,6 @@
             alert("Please sign in to save to playlist");
           }
           else{
-            alert("yes");
             if (confirm("Add playlist") == true) {
               $(this).toggleClass("liked");
               console.log("done");
@@ -148,16 +147,21 @@
                   names : name,
                 },
                 success: function(data) {
-                  alert("Playlist Saved")
-                },
-                error: function(){
-                  console.log("Error");
+                  if(data[0]){
+                    alert("Playlist already have");
+                  }
+                  else{
+                    alert("Playlist Saved")
+                  }
                   },
-                });
-                } else {
-                  return false;
-                 }
-                }  
+                  error: function(){
+                    console.log("Error");
+                    },
+                  });
+                  } else {
+                    return false;
+                  }
+                  }  
             });
        
         $(document).on("click", "#song", function () {

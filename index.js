@@ -235,15 +235,24 @@ app.set('view engine', 'ejs');
             const querystr2 = `https://api.lyrics.ovh/v1/${name}/${musics}`;
             axios.get(querystr2).then((response2) => {
                 bank.push(response2.data.lyrics);
-                playlist = new inslist({
-                    username: usernames,
-                    song: data,
-                    lyric:bank
-                }) 
-                playlist.save().then((result) => {
-                    console.log("Successful");
-                    res.send(bank);
+                inslist.find({
+                    lyric : bank
                 })
+                .then((response) => {
+                    if(!response[0]){
+                        playlist = new inslist({
+                            username: usernames,
+                            song: data,
+                            lyric:bank
+                        }) 
+                        playlist.save().then((result) => {
+                            console.log("Successful");
+                            res.send(bank);
+                        })
+                    }
+                    res.send(response);
+                })
+               
             })
         })
     }); 
@@ -261,14 +270,21 @@ app.set('view engine', 'ejs');
                 const querystr2 = `https://api.lyrics.ovh/v1/${artist}/${song}`;
                 axios.get(querystr2).then((response2) => {
                     bank.push(response2.data.lyrics);
-                    playlist = new inslist({
-                        username: usernames,
-                        song: data,
-                        lyric:bank
-                    }) 
-                    playlist.save().then((result) => {
-                        console.log("Successful");
-                        res.send(bank);
+                    inslist.find({
+                        lyric : bank
+                    })
+                    .then((response) => {
+                        if(!response[0]){
+                            playlist = new inslist({
+                                username: usernames,
+                                song: data,
+                                lyric:bank
+                            }) 
+                            playlist.save().then((result) => {
+                                console.log("Successful");
+                                res.send(bank);
+                            })
+                        }
                     })
                 })
             })
