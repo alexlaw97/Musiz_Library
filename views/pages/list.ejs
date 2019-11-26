@@ -149,7 +149,8 @@
 
         function chgSrc(link,x)
         {
-          var newlink = link.replace('watch?v=' , 'embed/');
+          var link2 = link.replace('http' , 'https');
+          var newlink = link2.replace('watch?v=' , 'embed/');
           document.getElementById("player").src =  newlink ;
           $.ajax({
             url: '/song_lyric',
