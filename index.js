@@ -79,7 +79,12 @@ app.set('view engine', 'ejs');
             name:req.body.name
         }) 
         lgn.save().then((result) => {
-            loginSession();
+            req.session.name = req.body.name;
+            req.session.user = req.body.username;
+            res.render('pages/index', {
+                name : req.session.name,
+                ans : "yes"
+            });
           })
     })
     
@@ -374,14 +379,11 @@ app.set('view engine', 'ejs');
         var sessionName = req.session.name;
         var sessionuser = req.session.user;
         if(!sessionName){
-            // res.redirect('/');  // Redirect back to login
-            // console.log('session invalid');
-            req.session.ans = "no";
+            req.session.ans = "no"; //Giving an answer with no
             next();
         }
         else {
-            // console.log('session valid'); 
-            req.session.ans = "yes";
+            req.session.ans = "yes"; //Giving an answer with yes
             next();
         }
     };
