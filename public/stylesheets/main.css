@@ -1,22 +1,46 @@
+body {
+  font-family: 'lato', sans-serif !important;
+}
+ 
  .form-control {
    border: none !important;
    border-bottom: 0.5px solid !important;
  }
 
- #song_list {
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
+ .table {
+   margin: auto;
+  font-family: 'lato', sans-serif;
+  border-collapse: separate;
+  border-radius:10px;
+  overflow: hidden;
 }
 
-#song_list td {
+.table thead {
+  background-color: #95A5A6;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.table td {
+  background-color: #ffffff;
+  box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
+}
+
+.table td {
   border:none;
   padding: 8px;
+  text-align:center;
 }
 
-#song_list tr:nth-child(even){background-color: #f2f2f2;}
 
-#song_list tr:hover {background-color: #ddd;}
+#list{
+  margin-top:5%;
+  
+}
+
+/* #song_list tr:nth-child(even){background-color: #f2f2f2;}
+
+#song_list tr:hover {background-color: #ddd;} */
 
 textarea {
 	min-height: 5em;
@@ -96,4 +120,12 @@ textarea {
 	color: #fefefe;
   }
   
+  #search{
+    margin-top: 1%;
+    /* margin-left:10%; */
+  }
   
+  h1{
+    margin-top:3% !important;
+    text-align:center;
+  }

@@ -8,9 +8,20 @@
     <% include ../partials/nav.ejs %>
     <input type="hidden" id="answer" value=<%=ans%>>
 
-      <div id="list">
-        <table id="song_list">
-          <tbody> </tbody>
+      <div class="mx-auto w-50 p-3 text-center" id="list">
+        <table class="table table-hover text-center"  id="song_list" >
+          <thead>
+            <tr>
+              <td>Play Button</td>
+              <td>Album</td>
+              <td>Description (Clickable)</td>
+              <td>Genre</td>
+              <td>Duration</td>
+              <td>Action</td>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
         </table>
       </div>
       
@@ -33,7 +44,7 @@
 
                     <!-- Modal Header -->
                     <div class="modal-header">
-                      <h4 class="modal-title">Modal Heading</h4>
+                      <h4 class="modal-title">Album Detail</h4>
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
 
@@ -76,7 +87,7 @@
         <script>
         var link,newlink;
         $(document).ready(function () {
-            $('#list tbody').html("");
+          $('#list tbody').html("");
           $.ajax({
             url: '/topmusic',
             type: 'GET',
@@ -115,7 +126,7 @@
                   <td id="song" data-toggle="modal" data-target="#display" data-desc="'+description+'" data-alb="'+album+'" data-view="'+views+'" data-play="'+totalplays+'">'+data[x][0].songname+'</td>\
                   <td>'+data[x][0].genre+'</td>\
                   <td>'+minutes+'</td>\
-                  <td><button class="button button-like" id="love" data-id = "'+x+'" data-name = "'+artname+'" data-music = "'+newmusic+'"><i class="fa fa-heart"></i><span>Add playlist</span></button></td></tr>}'
+                  <td><button class="button button-like" id="love" data-id = "'+x+'" data-name = "'+artname+'" data-music = "'+newmusic+'"><i class="fa fa-heart"></i><span>Add playlist</span></button></td></tr>'
                 $('#list tbody').html(curdiv + name);
                 }
             },

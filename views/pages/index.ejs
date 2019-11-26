@@ -8,15 +8,16 @@
     <% include ../partials/nav.ejs %>
     <input type="hidden" id="answer" value=<%=ans%>>
 
+    <h1>Search Artist</h1>
     <!-- Search form -->
-    <form class="form-inline md-form form-sm mb-3 ">
+    <form class="form-inline md-form form-sm mb-3 mx-auto w-50 p-3 " id="search"> 
         <i class="fas fa-search" aria-hidden="true"></i>
-        <input class="form-control form-control-sm ml-3 w-75 bar" id="artist" type="text" placeholder="Search" aria-label="Search" name="artist_name" >
+        <input class="form-control form-control-sm ml-3 w-75 bar" id="artist" type="text" placeholder="Enter Artist Name" aria-label="Search" name="artist_name" >
         <button type="button" id="searchartist">Search</button>
       </form>
 
-      <div id="list">
-        <table id="song_list">
+      <div class="mx-auto w-50 p-3 text-center" id="list">
+        <table class="table table-hover text-center"  id="song_list">
           <tbody> </tbody>
         </table>
       </div>

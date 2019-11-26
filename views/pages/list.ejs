@@ -8,8 +8,18 @@
     <% include ../partials/nav.ejs %>
 
 
-      <div id="list">
-        <table id="song_list">
+      <div class="mx-auto w-50 p-3 text-center" id="list">
+        <table class="table table-hover text-center" id="song_list">
+          <thead>
+            <tr>
+              <td>Player</td>
+              <td>Album</td>
+              <td>Description (Clickable)</td>
+              <td>Genre</td>
+              <td>Duration</td>
+              <td>Action</td>
+            </tr>
+          </thead>
           <tbody> </tbody>
         </table>
       </div>
@@ -110,7 +120,7 @@
                 }
                 var curdiv = $('#list tbody').html();
                 var name = "<tr>\
-                  <td style='display=none'><input id='song_id' type='hidden' value=''"+song_id+"''></td>\
+                  <td style='display:none'><input id='song_id' type='hidden' value=''"+song_id+"''></td>\
                   <td><a onclick=chgSrc('"+link+"','"+x+"') class='round-button'><i class='fa fa-play fa-2x' id='playbtn' data-toggle='modal' data-target='#myModal'></i></a></td>\
                   <td><img src='"+pic+"' alt='Artist' width='50' height='50'></td>\
                   <td id='song' data-toggle='modal' data-target='#display' data-desc='"+description+"' data-alb='"+album+"' data-view='"+views+"' data-play='"+totalplays+"'>"+data[x][0].songname+"</td>\
